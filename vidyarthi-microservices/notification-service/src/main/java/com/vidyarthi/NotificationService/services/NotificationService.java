@@ -67,7 +67,7 @@ public class NotificationService {
                     sseEmitter.send(
                             SseEmitter.event()
                                     .id(UUID.randomUUID().toString())
-                                    .data(productCreatedEvent.getTitle())
+                                    .data(productCreatedEvent.getType().equals("sell") ? "Want to buy "+productCreatedEvent.getTitle()+" ?":"Anyone have "+productCreatedEvent.getTitle()+" ?")
                                     .name(Constants.EVENT_PRODUCT_CREATED)
                                     .reconnectTime(2000) //time after which client should retry after disconnection from server or interruption in n/w ,helps incase of transient issues
                     );

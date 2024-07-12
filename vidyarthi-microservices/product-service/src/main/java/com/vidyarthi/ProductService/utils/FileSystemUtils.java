@@ -34,7 +34,7 @@ public class FileSystemUtils {
                 fos.close(); //close stream to avoid memory leak
                 return fileName+"."+fileExtension; //return file name stored at product image path
             }catch(IOException e){
-                return null;
+                return "";
             }
     }
     //Delete product img from file system
@@ -72,7 +72,7 @@ public class FileSystemUtils {
             return bytes;
         }catch(IOException e){
             log.info("Storing product image in file system failed."+e.getMessage());
-            return null;
+            return new byte[1];
         }
     }
 

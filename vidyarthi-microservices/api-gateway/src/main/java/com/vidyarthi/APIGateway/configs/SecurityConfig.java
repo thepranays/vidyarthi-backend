@@ -16,8 +16,9 @@ public class SecurityConfig {
                    .csrf((csrfSpec -> csrfSpec.disable())).
                    authorizeExchange(( //Disable authentication only for /eureka/**
                            authorizeExchangeSpec -> authorizeExchangeSpec.pathMatchers("/ws/vidyarthi-ws-chat/**"
-                                           ,"/eureka/**" ,
-                                           "/api/notification/event-product-created").permitAll()
+                                           ,"/api/product/get/**", //To allow non-authenticated user can see products but can't proceed for deal or edit or delete
+                                           "/api/notification/event-product-created" //To allow non-authenticated user also sees newly listed products notification
+                                           ,"/eureka/**" ).permitAll() //Discovery server monitoring web interface
                                    .anyExchange().authenticated()))
                    //^anyExchange(). authenticated() – anyRequest() defines a rule chain for any request which did not match the previous rules. In our case, such requests will be passed as long as they are authenticated. Please note that there can be only one default rule in the configuration, and it needs to be at the end.
                    .oauth2ResourceServer(oAuth2ResourceServerSpec -> oAuth2ResourceServerSpec.jwt(Customizer.withDefaults()));

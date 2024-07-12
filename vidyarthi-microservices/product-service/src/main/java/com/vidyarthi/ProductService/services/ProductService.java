@@ -110,11 +110,11 @@ public class ProductService {
 
     public List<ProductResponse> getAllProducts(){
         List<Product> products=productRepository.findAll();
-        List<byte[]> productsImgList=new ArrayList<>();
+        List<byte[]> productImgList=new ArrayList<>();
 
         //Retrieve product image from file system
         for (Product p : products) {
-            productsImgList.add(FileSystemUtils.RetrieveProductImage(p.getProduct_img_name(), p.getProduct_id()));
+            productImgList.add(FileSystemUtils.RetrieveProductImage(p.getProduct_img_name(), p.getProduct_id()));
         }
 
         List<ProductResponse> responses = new ArrayList<>();
@@ -124,7 +124,7 @@ public class ProductService {
                 .product_id(products.get(i).getProduct_id())
                 .description(products.get(i).getDescription())
                 .category(products.get(i).getCategory())
-                .product_img(productsImgList.get(i))
+                .product_img(productImgList.get(i))
                 .price(products.get(i).getPrice().toString())
                 .title(products.get(i).getTitle())
                 .type(products.get(i).getType())

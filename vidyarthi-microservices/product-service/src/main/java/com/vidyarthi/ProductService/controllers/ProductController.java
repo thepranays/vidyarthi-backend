@@ -24,7 +24,7 @@ public class ProductController {
     @PostMapping("/create")
     @ResponseStatus(HttpStatus.CREATED)
     public void createProduct(@RequestPart("product") final ProductRequest productRequest, @RequestPart("product_img")MultipartFile productImg){
-        System.out.println("hi");
+
          /*
     @RequestPart : This annotation associates a part of a multipart request with the method argument, which is useful for sending complex multi-attribute data as payload, e.g., JSON or XML.
     In other words Request Part parse your json string object from request to your class object. On the other hand, Request Param just obtain the string value from your json string value.
