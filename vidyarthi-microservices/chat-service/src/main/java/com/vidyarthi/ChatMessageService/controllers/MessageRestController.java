@@ -15,12 +15,12 @@ import java.util.List;
 
 @RestController
 @RequiredArgsConstructor
-@RequestMapping("/chat")
+@RequestMapping("/api/chat/message")
 public class MessageRestController {
     @Autowired
     private final MessageService messageService;
 
-    @GetMapping("/get/convo/{convo_id}")
+    @GetMapping("/get/{convo_id}")
     public List<MessageResponse> getMessagesByConvoId(@PathVariable(value="convo_id") final String convoId){
         return messageService.getMessagesByConvoId(convoId);
     }

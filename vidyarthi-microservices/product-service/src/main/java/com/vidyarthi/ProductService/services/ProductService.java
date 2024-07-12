@@ -1,14 +1,18 @@
 package com.vidyarthi.ProductService.services;
 
 
+
+import com.vidyarthi.ProductService.constants.Constants;
 import com.vidyarthi.ProductService.dtos.ProductRequest;
 import com.vidyarthi.ProductService.dtos.ProductResponse;
+import com.vidyarthi.ProductService.events.ProductCreatedEvent;
 import com.vidyarthi.ProductService.models.Product;
 import com.vidyarthi.ProductService.repos.ProductRepository;
 import com.vidyarthi.ProductService.utils.FileSystemUtils;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.kafka.core.KafkaTemplate;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 
@@ -27,13 +31,14 @@ import java.util.UUID;
 public class ProductService {
     @Autowired
     private final ProductRepository productRepository;
-
+    @Autowired
+    private final KafkaTemplate<String, ProductCreatedEvent> kafkaTemplate;
     public void createProduct(ProductRequest productRequest, MultipartFile productImg)  {
         String productId=UUID.randomUUID().toString();
 
         //Store product image to file system
         String pathToProductImg= FileSystemUtils.StoreProductImage(productImg,productId);
-        System.out.println(productRequest.toString());
+       // System.out.println(productRequest.toString());
         //Store product data in DB
         Product newProduct=Product.builder()
                 .product_id(productId)
@@ -47,9 +52,14 @@ public class ProductService {
                 .createdAt(Timestamp.from(Instant.now()))
                 .updatedAt(Timestamp.from(Instant.now()))
                 .build();
-        productRepository.save(newProduct);
+        productRepository.save(newProduct); //save to postgres
 
-       log.info("Created a product title:"+productRequest.getTitle()+" pid:"+newProduct.getProduct_id()+" by uid:"+productRequest.getUid());
+        //Send kafka message to kafka new product created topic (i.e. produce)
+        kafkaTemplate.send(Constants.KAFKA_TOPIC_PRODUCT_CREATED,
+                ProductCreatedEvent.builder().title(newProduct.getTitle()).type(newProduct.getType()).uid(newProduct.getUid()).build());
+
+        //Logging
+        log.info("Created a product title:"+productRequest.getTitle()+" pid:"+newProduct.getProduct_id()+" by uid:"+productRequest.getUid());
     }
     public void updateProductById(String productId,ProductRequest productRequest,MultipartFile productImg){
         Optional<Product> optionalProduct=productRepository.findById(productId);

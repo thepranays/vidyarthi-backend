@@ -32,7 +32,7 @@ public class WebSocketConfig implements WebSocketMessageBrokerConfigurer {
     public void registerStompEndpoints(StompEndpointRegistry registry){
 
         //endpoint to connect to WS stomp protocol
-        registry.addEndpoint("/vidyarthi-ws-chat") .setAllowedOrigins("*"); //TODO:replace * when in production
+        registry.addEndpoint("/ws/vidyarthi-ws-chat") .setAllowedOrigins("*"); //TODO:replace * when in production
     }
 
     @Override

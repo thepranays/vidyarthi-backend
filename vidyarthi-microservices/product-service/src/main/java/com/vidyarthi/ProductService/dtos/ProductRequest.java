@@ -17,6 +17,6 @@ public class ProductRequest {
     private String price;
     private String category;
     private String type;
-    //product_img is sent separately as multipart file (requestpart="product_img")
+    //product_img is sent separately as file in multipart request (@requestpart="product_img")
 
 }
