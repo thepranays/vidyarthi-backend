@@ -58,6 +58,34 @@ public class ConversationService {
         return null;
     }
 
+    //Update conversation by convo-id
+    public void updateConversationByConvoId(String convoId,ConversationRequest conversationRequest){
+        Optional<Conversation> optionalConversation=conversationRepository.findById(convoId);
+        if(optionalConversation.isPresent()){
+            Conversation conv=optionalConversation.get();
+                conv.setConvoId(UUID.randomUUID().toString());
+                conv.setCreatedAt((Timestamp.from(Instant.now())));
+                conv.setSellerUid(conversationRequest.getSeller_uid());
+                conv.setBuyerUid(conversationRequest.getBuyer_uid());
+                conv.setProductId(conversationRequest.getProduct_id());
+                conv.setLastMsg(conv.getLastMsg());
+                conv.setLastMsgUid(conv.getLastMsgUid());
+                //save back to db
+                conversationRepository.save(conv);
+        }
+    }
+
+    //Update last message and last message user id columns in conversation
+    public void updateLastMessageInConvo(String convoId,String message,String message_uid){
+        Optional<Conversation> optionalConversation=conversationRepository.findById(convoId);
+        if(optionalConversation.isPresent()){
+            Conversation conv=optionalConversation.get();
+            conv.setLastMsg(message);
+            conv.setLastMsgUid(message_uid);
+            //save back to db
+            conversationRepository.save(conv);
+        }
+    }
 
     public List<ConversationResponse> getBuyingConversationsOfUser(String uid){
         List<Conversation> convList = conversationRepository.findByBuyerUid(uid);

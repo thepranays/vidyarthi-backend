@@ -2,6 +2,7 @@ package com.vidyarthi.ChatMessageService.controllers;
 
 import com.vidyarthi.ChatMessageService.dtos.MessageRequest;
 import com.vidyarthi.ChatMessageService.models.Message;
+import com.vidyarthi.ChatMessageService.services.ConversationService;
 import com.vidyarthi.ChatMessageService.services.MessageService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -21,6 +22,8 @@ public class MessageController {
 
     @Autowired
     private final MessageService messageService;
+    @Autowired
+    private final ConversationService conversationService;
 
 
 
@@ -28,13 +31,18 @@ public class MessageController {
     public void processAndRelayMessage(@Payload final MessageRequest message){
 
         System.out.println(message.toString());
-        
-        //save message in db
-        messageService.saveMessage(message);
-
         //sends message to /user/queue/messages-{Recipient_uid}
         //refer:https://docs.spring.io/spring-framework/reference/web/websocket/stomp/user-destination.html
         simpMessagingTemplate.convertAndSendToUser(message.getRecipient_uid(),"/queue/messages",message);
+
+        //Save message in db
+        //Has valid convo-id (conversation id),as frontend first creates conversation if it doesn't exist then send message
+        messageService.saveMessage(message);
+
+        //Update conversation last message and last message user id
+        conversationService.updateLastMessageInConvo(message.getConvo_id(),message.getMsg(),message.getSender_uid());
+
+
     }
 
 }

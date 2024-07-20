@@ -48,6 +48,17 @@ public class ConversationController {
 
         return conversationService.getConversationByConvoId(convoId);
     }
+
+    @PutMapping("/get/{convo_id}")
+    @ResponseStatus(HttpStatus.OK)
+    public void updateConversationByConvoId(@PathVariable(value="convo_id")final String convoId,@RequestBody final ConversationRequest conversationRequest){
+        conversationService.updateConversationByConvoId(convoId,conversationRequest);
+    }
+
+    //TODO:If Required, Add route to Update last message and last message uid
+    // public void updateLastMessageInConvo(String convoId,String message,String message_uid){}
+
+
     //Get conversation using unique combination of seller,buyer uid and product id
     @GetMapping("/get")
     @ResponseStatus(HttpStatus.OK)

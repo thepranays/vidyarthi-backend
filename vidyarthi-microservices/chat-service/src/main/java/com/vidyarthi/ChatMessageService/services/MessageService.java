@@ -21,7 +21,7 @@ public class MessageService {
         Message msg=Message.builder()
                         .msg(msgReq.getMsg())
                         .recipientUid(msgReq.getRecipient_uid())
-                        .senderUid(msgReq.getRecipient_uid())
+                        .senderUid(msgReq.getSender_uid())
                         .createdAt(msgReq.getCreatedAt())
                         .msgId(msgReq.getMsg_id())
                         .convoId(msgReq.getConvo_id())
